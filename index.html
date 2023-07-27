@@ -1,6 +1,730 @@
+
+<!DOCTYPE html>
+
+
 <html>
-  <script>
-    // Redirect to the new URL
-    window.location.href = "https://datamb.football/plots"; // Replace with the desired new URL
+<head>
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="https://datamb.football/favicon.ico">
+	<meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@DataMB_">
+    <meta name="twitter:title" content="DataMB | Plot PL Goalkeepers">
+    <meta name="twitter:description" content="Generate scatter plots of PL keepers">
+    <meta name="twitter:image" content="https://i.imgur.com/p43wTxg.png">
+    <meta property="og:image" content="https://i.imgur.com/p43wTxg.png">
+	
+	<title translate="no">DataMB | Plot PL Goalkeepers</title>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+<style>
+
+
+
+	
+  /* Dark Mode Styles */
+  body.dark-mode,
+  body.dark-mode * {
+    color: #f2f2f2;
+  }
+
+  body.dark-mode {
+    background-color: #0F0F0E;
+  }
+
+body.dark-mode .tooltip {
+  color: #000000; /* Set the font color to black in dark mode */
+  background-color: #f9f9f9;
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+
+
+ body.dark-mode #search-bar {
+    color: #000; /* Specify the desired text color for dark mode */
+background-color : #999
+  }
+	
+ body.dark-mode	  #search-bar::placeholder {
+    color: #fff; /* Specify the desired color for the placeholder text */
+  }
+
+  body.dark-mode svg .x-label {
+    /* Override SVG text color */
+    fill: #f2f2f2;
+  }
+
+
+  body.dark-mode svg .y-label {
+    /* Override SVG text color */
+    fill: #f2f2f2;
+  }
+
+body.dark-mode select {
+  color: #f2f2f2; /* Set the text color to a light color in dark mode */
+  background-color: #333333; /* Set the background color to a dark color in dark mode */
+}
+
+
+body.dark-mode .player-name {
+  fill: #ffffff; /* Set the fill color to white in dark mode */
+}
+
+body.dark-mode button {
+  /* Override button background color */
+  background-color: #333333;
+}
+
+body.dark-mode button,
+body.dark-mode button:focus {
+  /* Override button text color */
+  color: #f2f2f2;
+}
+
+body.dark-mode button:hover {
+  /* Preserve button hover property */
+  color: initial;
+}
+
+body.dark-mode .button-8 {
+  /* Override button background color */
+  background-color: #13293d; /* Dark blue color */
+  color: #f2f2f2; /* Off-white color */
+}
+
+body.dark-mode .button-8:hover,
+body.dark-mode .button-8:focus {
+  /* Override button hover and focus state */
+  background-color: #3a6ea5; /* Darker blue color */
+  color: #f2f2f2; /* Off-white color */
+}
+
+body.dark-mode .button-8:hover,
+body.dark-mode .button-8:focus {
+  /* Override button hover and focus state */
+  background-color: #3a6ea5; /* Darker blue color */
+  color: #f2f2f2; /* Off-white color */
+}
+
+
+ .dark-mode-toggle {
+    position: absolute;
+    top: 716.5px;
+    left: 684.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0de;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  }
+
+
+.dark-mode-toggle .toggle-icon::before {
+  font-family: "Ionicons";
+  content: "\f467"; /* Unicode value for the moon icon in Ionicons */
+  font-size: 35px; /* Adjust the value as needed */
+}
+
+body.dark-mode .dark-mode-toggle {
+  background-color: #333333;
+}
+
+
+
+body.dark-mode .dark-mode-toggle .toggle-icon::before {
+  font-family: "Ionicons";
+  content: "\f3b0"; /* Unicode value for the sun icon in Ionicons */
+  font-size: 24px; /* Adjust the value as needed */
+}
+
+
+
+body.dark-mode .toggle-slider {
+  background-color: #2B2C2E; /* Darker background color for dark mode */
+}
+
+body.dark-mode input:checked + .toggle-slider:before {
+  background-color: #ccc; /* Darker background color for dark mode */
+}
+
+
+circle.highlighted {
+  stroke: #ff00ff;
+  stroke-width: 3px;
+}
+
+
+
+circle {
+  cursor: pointer;
+}
+
+.button-2 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 135px;
+  left: 1150px;
+width: 120px; 
+ 
+  touch-action: manipulation;
+}
+
+.button-2:hover {
+   box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-3 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 200px;
+  left: 1150px;
+width: 120px;
+ 
+  touch-action: manipulation;
+}
+
+.button-3:hover {
+   box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-4 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 265px;
+  left: 1150px;
+width: 120px;
+ 
+  touch-action: manipulation;
+}
+
+.button-4:hover {
+   box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-5 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 330px;
+  left: 1150px;
+width: 120px; 
+ 
+  touch-action: manipulation;
+}
+
+.button-5:hover {
+   box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+
+.button-6 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 395px;
+  left: 1150px;
+width: 120px;
+ 
+  touch-action: manipulation;
+}
+
+.button-6:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+
+.button-7 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 460px;
+  left: 1150px;
+width: 120px;
+ 
+  touch-action: manipulation;
+}
+
+.button-7:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-9 {
+  align-items: center;
+  background-color: #F9F9F9;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 525px;
+  left: 1150px;
+width: 120px;
+ 
+  touch-action: manipulation;
+}
+
+.button-9:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-8 {
+  align-items: center;
+  background-color: #1DA1F2;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 590px;
+  left: 1150px;
+ width: 120px; 
+  touch-action: manipulation;
+}
+
+.button-8:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+
+#search-bar {
+    position: absolute;
+    top: 726px; /* Adjust the desired top position */
+    left: 760px; /* Adjust the desired left position */
+  }
+
+
+.toggle-button {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 7px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+position: absolute;
+top: 717px;
+left: 611px;
+}
+
+
+
+.icon::before {
+  content: "\f2b5";
+  font-family: "Ionicons"; /* Replace with the appropriate font */
+font-size: 22px;
+}
+
+
+     img {
+            width: 200px;
+position: absolute;
+top: 235px;
+pointer-events: none;
+z-index: -1; 
+left: 475px;
+opacity: .055; 	
+	}
+
+
+  #bottom-container {
+    position: absolute;
+    top: 890px;
+  }	
+	
+
+  #bottom-container2 {
+    position: absolute;
+    top: 1340px;
+  }	     
+	
+		 #bottom-container3 {
+    position: absolute;
+    top: 890px;
+    right: 0px;	  
+  }	
+
+
+		 #select-league {
+    position: absolute;
+    top: 726px;
+    left: 922px;	  
+  }	
+
+
+.icon4::before {
+  content: "\f21c";
+  font-family: "Ionicons"; /* Replace with the appropriate font */
+font-size: 22px;
+}		
+
+.icon3::before {
+  content: "\f448";
+  font-family: "Ionicons"; /* Replace with the appropriate font */
+font-size: 22px;
+}
+
+
+.button-1 {
+  align-items: center;
+  background-color: #e0e0de;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 1.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 0.1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 80px;
+  left: 1150px;
+  width: 50px; 
+ 
+  touch-action: manipulation;
+}
+
+.button-1:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+.button-12 {
+  align-items: center;
+  background-color: #e0e0de;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-family: Inter,sans-serif;
+  font-size: 1.82rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 0.1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s,-webkit-box-shadow .1s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  position: absolute;
+  top: 80px;
+  left: 1218px;
+  width: 50px; 
+ 
+  touch-action: manipulation;
+}
+
+.button-12:hover {
+  box-shadow: rgba(0, 0, 0, 0.4) 3px 3px 3px;
+}
+
+
+	     
+</style>
+
+
+
+
+	<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({article:'auto'});
+  !function (e, f, u, i) {
+    if (!document.getElementById(i)){
+      e.async = 1;
+      e.src = u;
+      e.id = i;
+      f.parentNode.insertBefore(e, f);
+    }
+  }(document.createElement('script'),
+  document.getElementsByTagName('script')[0],
+  '//cdn.taboola.com/libtrc/datamb-pub-pub/loader.js',
+  'tb_loader_script');
+  if(window.performance && typeof window.performance.mark == 'function')
+    {window.performance.mark('tbl_ic');}
+</script>
+	
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7677714701428206"
+     crossorigin="anonymous"></script>	
+</head>	
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PSBMXX80EF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PSBMXX80EF');
+</script>
+
+<body>
+	
+	
+	 <img src="https://i.imgur.com/UurMbGS.png" alt="Logo">
+
+	
+	<div class="dark-mode-toggle" onclick="toggleDarkMode()">
+    <div class="toggle-icon"></div>
+  </div>
+<svg id="scatter-plot"></svg>
+<input type="text" id="search-bar" placeholder="Search player...">
+<button id="toggle-median-lines" class="toggle-button"><div class="icon"></div></button>
+<script>
+
+var _0x33a04e=_0x5529;(function(_0x96b90c,_0x107097){var _0x5abc99=_0x5529,_0x148bbe=_0x96b90c();while(!![]){try{var _0x36634a=-parseInt(_0x5abc99(0xef))/0x1+-parseInt(_0x5abc99(0x11d))/0x2+-parseInt(_0x5abc99(0x150))/0x3*(parseInt(_0x5abc99(0xda))/0x4)+-parseInt(_0x5abc99(0x11b))/0x5*(parseInt(_0x5abc99(0x143))/0x6)+parseInt(_0x5abc99(0xdd))/0x7+-parseInt(_0x5abc99(0xf0))/0x8*(-parseInt(_0x5abc99(0xd4))/0x9)+parseInt(_0x5abc99(0x117))/0xa*(parseInt(_0x5abc99(0x122))/0xb);if(_0x36634a===_0x107097)break;else _0x148bbe['push'](_0x148bbe['shift']());}catch(_0x1b53ad){_0x148bbe['push'](_0x148bbe['shift']());}}}(_0x2bf2,0x1f8ec));var csvData=_0x33a04e(0x128),rows=csvData[_0x33a04e(0x10d)]()[_0x33a04e(0xdc)]('\x0a'),header=rows[0x0][_0x33a04e(0xdc)](','),data=rows[_0x33a04e(0xec)](0x1)[_0x33a04e(0xdf)](function(_0x2b6bae){var _0x19ea2=_0x33a04e;return _0x2b6bae['split'](',')[_0x19ea2(0xdf)](function(_0x2af0e3){return parseFloat(_0x2af0e3);});}),margin={'top':0x28,'right':0x50,'bottom':0x64,'left':0x64},width=0x438-margin[_0x33a04e(0xdb)]-margin['right'],height=0x2d0-margin[_0x33a04e(0x120)]-margin[_0x33a04e(0x11e)],medianLinesVisible=![],container=d3[_0x33a04e(0xd7)]('body')[_0x33a04e(0xd9)]('div')[_0x33a04e(0x140)](_0x33a04e(0x113),_0x33a04e(0x124)),selectX=container['append'](_0x33a04e(0xd7))[_0x33a04e(0x101)]('id',_0x33a04e(0x12e))['on'](_0x33a04e(0x115),updateChart)['style'](_0x33a04e(0x113),_0x33a04e(0xd5))[_0x33a04e(0x140)](_0x33a04e(0xdb),_0x33a04e(0x109))[_0x33a04e(0x140)](_0x33a04e(0x120),_0x33a04e(0xfc)),selectY=container[_0x33a04e(0xd9)]('select')[_0x33a04e(0x101)]('id',_0x33a04e(0xe0))['on'](_0x33a04e(0x115),updateChart)['style'](_0x33a04e(0x113),_0x33a04e(0xd5))['style']('left','330px')[_0x33a04e(0x140)](_0x33a04e(0x120),'0px'),xMedian=d3['median'](data,function(_0x25aa88){var _0x511b3f=_0x33a04e;return _0x25aa88[header[_0x511b3f(0x145)](xMetric)];}),yMedian=d3[_0x33a04e(0x14a)](data,function(_0x58ef2b){var _0x12b814=_0x33a04e;return _0x58ef2b[header[_0x12b814(0x145)](yMetric)];});header[_0x33a04e(0xec)](0x2)[_0x33a04e(0x13c)](function(_0x181092){var _0x439663=_0x33a04e;selectX[_0x439663(0xd9)](_0x439663(0x102))[_0x439663(0x121)](_0x181092)['attr'](_0x439663(0x13d),_0x181092),selectY['append']('option')[_0x439663(0x121)](_0x181092)['attr'](_0x439663(0x13d),_0x181092);});var svg=d3[_0x33a04e(0xd7)](_0x33a04e(0x14d))[_0x33a04e(0x101)](_0x33a04e(0x12c),width+margin[_0x33a04e(0xdb)]+margin[_0x33a04e(0x127)])['attr'](_0x33a04e(0xf8),height+margin[_0x33a04e(0x120)]+margin[_0x33a04e(0x11e)])[_0x33a04e(0xd9)]('g')[_0x33a04e(0x101)](_0x33a04e(0xe6),_0x33a04e(0x13b)+margin['left']+','+margin['top']+')'),xMetric=header[0x2],yMetric=header[0x2],xScale=d3[_0x33a04e(0x148)]()['domain']([0x0,d3['max'](data,function(_0x5ad5a1){return _0x5ad5a1[0x2];})])[_0x33a04e(0x132)]([0x0,width]),yScale=d3[_0x33a04e(0x148)]()[_0x33a04e(0x10f)]([0x0,d3[_0x33a04e(0xe2)](data,function(_0x262a33){return _0x262a33[0x2];})])[_0x33a04e(0x132)]([height,0x0]),xAxis=d3['axisBottom'](xScale)['tickSize'](0x0),yAxis=d3[_0x33a04e(0x10a)](yScale)[_0x33a04e(0x137)](0x0),xExtent=d3[_0x33a04e(0xf9)](data,function(_0x570265){return _0x570265[header['indexOf'](xMetric)];}),yExtent=d3[_0x33a04e(0xf9)](data,function(_0x4529b4){var _0x19716f=_0x33a04e;return _0x4529b4[header[_0x19716f(0x145)](yMetric)];});svg[_0x33a04e(0xd9)]('g')[_0x33a04e(0x101)]('transform',_0x33a04e(0x13f)+height+')')[_0x33a04e(0xf3)](xAxis)[_0x33a04e(0xee)]('text')[_0x33a04e(0x129)](),svg['append']('g')['call'](yAxis)[_0x33a04e(0xee)]('text')[_0x33a04e(0x129)](),svg[_0x33a04e(0xd9)](_0x33a04e(0x121))['attr']('class','x-label')['attr'](_0x33a04e(0x123),_0x33a04e(0xf2))[_0x33a04e(0x101)]('x',width)[_0x33a04e(0x101)]('y',height+margin[_0x33a04e(0x120)])[_0x33a04e(0x121)](header[0x2])[_0x33a04e(0x140)]('font-family',_0x33a04e(0xe4))[_0x33a04e(0x140)]('font-size',_0x33a04e(0x11c)),svg['append']('text')[_0x33a04e(0x101)](_0x33a04e(0xfd),'y-label')[_0x33a04e(0x101)]('text-anchor',_0x33a04e(0xf2))[_0x33a04e(0x101)]('transform',_0x33a04e(0x105))[_0x33a04e(0x101)]('y',-0x23)[_0x33a04e(0x101)]('x',0x0)[_0x33a04e(0x121)](header[0x2])['style']('font-family',_0x33a04e(0xe4))[_0x33a04e(0x140)](_0x33a04e(0xf1),'12px'),svg[_0x33a04e(0xd9)]('g')['attr'](_0x33a04e(0xfd),_0x33a04e(0xf5))[_0x33a04e(0x101)](_0x33a04e(0xe6),_0x33a04e(0x13f)+height+')')['call'](d3['axisBottom'](xScale)[_0x33a04e(0x137)](0x0)),svg[_0x33a04e(0xd9)]('g')[_0x33a04e(0x101)](_0x33a04e(0xfd),_0x33a04e(0x135))['call'](d3[_0x33a04e(0x10a)](yScale)['tickSize'](0x0));var tooltip=d3[_0x33a04e(0xd7)](_0x33a04e(0xff))['append'](_0x33a04e(0xf6))[_0x33a04e(0x101)](_0x33a04e(0xfd),_0x33a04e(0xfa))['style'](_0x33a04e(0x12f),0x0);tooltip[_0x33a04e(0x140)]('position','absolute')['style'](_0x33a04e(0x136),_0x33a04e(0xe3))['style'](_0x33a04e(0x125),_0x33a04e(0x142))[_0x33a04e(0x140)]('border-width',_0x33a04e(0x13a))[_0x33a04e(0x140)](_0x33a04e(0x14c),_0x33a04e(0xe5))[_0x33a04e(0x140)](_0x33a04e(0xf7),_0x33a04e(0x12d))[_0x33a04e(0x140)]('font-size','12px'),document['addEventListener'](_0x33a04e(0xde),function(_0x416f89){var _0x5618d5=_0x33a04e;!tooltip[_0x5618d5(0x14b)](_0x416f89['target'])&&(tooltip[_0x5618d5(0x140)]['display']=_0x5618d5(0x10c));});var names=rows[_0x33a04e(0xec)](0x1)[_0x33a04e(0xdf)](function(_0x1c52f2){var _0x23b77b=_0x33a04e;return _0x1c52f2[_0x23b77b(0xdc)](',')[0x1];}),searchBar=document['getElementById'](_0x33a04e(0x103));function _0x2bf2(){var _0x2c1681=['transform','display','.x-label','NFD','.y-axis','pageX','slice','hovered','selectAll','39229ABZchf','9304Gzbtzz','font-size','end','call','mouseover','x-axis','div','padding','height','extent','tooltip','includes','0px','class','red','body','getElementById','attr','option','search-bar','clicked','rotate(-90)','<br/>','.x-axis','replace','80px','axisLeft','classed','none','trim','.player-name','domain','stroke-dasharray','filter','toLowerCase','position','nice','change','event','105290dQwCGo','addEventListener','stroke','join','35065gPgdxQ','12px','417722PkwpUl','bottom','data','top','text','385WezkJE','text-anchor','relative','border','mouseout','right','ID,Player,Minutes\x20played,Duels\x20per\x2090,Duels\x20won\x20%,Successful\x20defensive\x20actions\x20per\x2090,Defensive\x20duels\x20per\x2090,Defensive\x20duels\x20won\x20%,Aerial\x20duels\x20per\x2090,Aerial\x20duels\x20won\x20%,Interceptions\x20per\x2090,PAdj\x20Interceptions,Yellow\x20cards\x20per\x2090,Received\x20passes\x20per\x2090,Passes\x20per\x2090,Accurate\x20passes\x20%,Forward\x20passes\x20per\x2090,Accurate\x20forward\x20passes\x20%,Lateral\x20passes\x20per\x2090,Accurate\x20lateral\x20passes\x20%,Short\x20/\x20medium\x20passes\x20per\x2090,Accurate\x20short\x20/\x20medium\x20passes\x20%,Long\x20passes\x20per\x2090,Accurate\x20long\x20passes\x20%,Average\x20pass\x20length\x20m,Average\x20long\x20pass\x20length\x20m,Passes\x20to\x20final\x20third\x20per\x2090,Accurate\x20passes\x20to\x20final\x20third\x20%,Passes\x20to\x20penalty\x20area\x20per\x2090,Accurate\x20passes\x20to\x20penalty\x20area\x20%,Through\x20passes\x20per\x2090,Accurate\x20through\x20passes\x20%,Progressive\x20passes\x20per\x2090,Accurate\x20progressive\x20passes\x20%\x0a1,David\x20Raya,3781,0.76,84.38,2.05,0.1,50,0.45,84.21,2,2.5,0.02,17.5,25.14,82.48,15.64,74.12,8.85,96.77,11.81,97.98,13.21,69.37,37.67,49.63,4.4,63.24,0.4,35.29,0.38,31.25,9.69,78.87\x0a2,A.\x20Ramsdale,3774,0.6,84,1.69,0.1,100,0.29,91.67,1.6,2.61,0.02,13.47,18.91,86.25,10.92,78.38,7.11,98.99,12.23,97.66,6.63,65.83,31.34,48.26,3.1,62.31,0.21,33.33,0.19,50,4.84,76.85\x0a3,David\x20de\x20Gea,3707,0.49,95,1.14,0.02,100,0.34,92.86,1.12,1.52,0,15.76,21.58,84.7,11.51,73.84,9.25,97.64,13.74,98.41,7.77,61.25,31.23,46.89,0.85,48.57,0,0,0.17,42.86,6.02,63.71\x0a4,J.\x20Pickford,3669,0.88,66.67,1.86,0.12,60,0.37,66.67,1.79,2.15,0.15,12.22,17.98,77.63,11.95,67.35,5.3,98.15,7.75,96.84,10.18,63.37,40.05,52.37,4.61,51.06,0.25,10,0.52,33.33,6.84,81\x0a5,Alisson,3639,0.79,84.38,2.3,0.1,50,0.54,86.36,2.25,3.55,0.02,20.63,27.53,89.49,13.13,79.47,13.4,99.45,21.17,98.48,6.33,59.77,27.15,45.48,1.58,48.44,0.12,60,0.27,45.45,4.18,66.27\x0a6,N.\x20Pope,3604,0.7,75,2.32,0.15,83.33,0.3,91.67,2.2,3.38,0.07,8.42,13.96,85.51,6.82,72.53,6.57,98.1,8.97,98.05,4.99,63,31.97,46.99,1.25,48,0,0,0.05,50,3.47,76.98\x0a7,José\x20Sá,3555,0.94,89.19,1.32,0.1,50,0.46,94.44,1.27,1.71,0.05,14.1,19.57,86.03,9.59,73.61,9.01,98.03,13.62,97.4,5.95,60,29.08,46.86,1.14,35.56,0.05,0,0.13,60,4.56,63.33\x0a8,B.\x20Leno,3553,0.66,73.08,2.1,0.08,66.67,0.38,86.67,2.05,2.71,0.08,16.97,23.61,90.77,9.88,79.74,12.97,98.83,17.33,99.42,6.28,66.94,29.01,49.41,1.44,50.88,0.05,0,0.03,0,4.38,76.3\x0a9,E.\x20Martínez,3476,0.8,77.42,2.36,0.13,40,0.41,100,2.3,3.28,0.18,16.91,25.09,87.51,11.7,76.33,12.69,97.55,15.77,99.18,9.32,67.78,30.57,47.47,2.28,50,0.21,0,0.23,11.11,6.08,77.45\x0a10,Ederson,3422,0.68,76.92,1.5,0.11,25,0.34,92.31,1.47,2.56,0.08,20.78,25.43,90.18,12.47,84.18,11.97,96.48,19.96,97.89,5.44,62.32,27.46,47.29,1.16,38.64,0.05,0,0.29,18.18,3.79,63.89\x0a11,Ł.\x20Fabiański,3390,0.93,82.86,1.46,0.05,100,0.69,92.31,1.41,1.55,0.03,8.65,13.78,81.5,9.29,74.29,4.04,98.03,6.4,97.51,7.3,68.36,38.57,51.43,1.38,51.92,0.08,0,0.08,33.33,5.89,77.48\x0a12,I.\x20Meslier,3368,0.99,72.97,2.43,0.16,50,0.56,85.71,2.27,3.02,0.08,10.77,16.86,80.03,8.9,64.26,7.35,98.18,9.97,97.32,6.87,55.25,32.85,48.19,1.47,34.55,0.19,14.29,0.03,100,5.13,65.63\x0a13,G.\x20Bazunu,3170,0.97,79.41,2.13,0.11,75,0.62,86.36,2.04,2.53,0,15.3,21.52,80.61,14.22,71.86,6.62,98.28,10.19,95.82,11.19,67.51,37.39,50.6,4.06,60.14,0.2,14.29,0.17,16.67,9,77.29\x0a14,Kepa\x20Arrizabalaga,2819,1.05,72.73,1.79,0.1,33.33,0.61,78.95,1.72,2.55,0.03,17.37,22.99,89.86,9.51,77.52,11.59,98.62,17.88,98.04,5.08,61.64,26.09,37.99,0.86,51.85,0.06,0,0.06,0,3.8,57.14\x0a15,Vicente\x20Guaita,2648,0.71,90.48,2.01,0.07,100,0.54,87.5,1.94,2.27,0.03,11.9,17.3,86.25,8.56,75.4,7.99,97.02,9.62,98.94,7.65,70.67,31.95,45.49,0.54,50,0,0,0.03,100,5.2,76.47\x0a16,Neto,2615,0.65,73.68,2.07,0.1,100,0.38,72.73,1.93,2.11,0.14,8.85,15.14,82.5,9.6,76.34,4.72,95.62,7.81,95.59,7.19,69.86,34.65,48,1.41,51.22,0.07,50,0.03,0,5.89,74.85\x0a17,D.\x20Ward,2552,0.78,72.73,1.38,0.18,60,0.35,100,1.23,1.54,0,15.94,21.62,87.77,8.68,72.76,11.46,98.15,14.28,99.26,7.3,65.7,29.05,47.22,1.09,51.61,0.07,50,0.04,0,4.62,72.52\x0a18,H.\x20Lloris,2411,0.93,80,1.49,0.15,75,0.52,92.86,1.34,1.7,0,12.62,16.84,86.7,8.55,75.55,7.62,98.04,9.44,99.6,7.39,70.2,31.69,44.85,1.12,63.33,0,0,0.04,0,4.89,72.52\x0a19,Robert\x20Sánchez,2259,0.68,64.71,1.24,0.16,50,0.4,80,1.16,1.83,0.08,17.53,21.71,84.4,11.79,75.68,8.61,95.37,16.02,96.52,5.7,50.35,28.38,50.51,2.03,35.29,0.12,0,0.32,12.5,4.38,52.73\x0a20,D.\x20Henderson,1763,0.26,60,1.84,0.05,0,0.1,100,1.84,2.03,0.1,15.01,21.03,79.61,12.15,66.39,8.17,98.75,11.13,99.54,9.8,57.81,36.5,51.47,2.91,47.37,0.2,25,0.31,33.33,6.07,69.75\x0a21,K.\x20Navas,1699,0.79,80,1.91,0,0,0.64,100,1.91,2.03,0.11,8.63,14.25,79.93,9.85,73.66,3.87,95.89,6.04,98.25,8.1,67.32,38.76,48.52,1.54,55.17,0,0,0.05,0,5.77,77.98\x0a22,J.\x20Steele,1510,0.6,70,1.55,0.06,0,0.24,75,1.49,2.74,0.06,17.64,24.74,92.29,13.95,86.75,9.54,99.38,19.25,97.83,5.48,72.83,24.22,42.72,0.77,23.08,0.06,0,0.24,25,3.81,73.44\x0a23,F.\x20Forster,1356,0.53,87.5,1.33,0.07,100,0.27,75,1.26,1.7,0.07,9.36,13.74,84.06,6.5,67.35,6.7,99.01,8.89,98.51,4.85,57.53,29.58,45.25,1.06,50,0.07,0,0.07,0,3.12,63.83\x0a24,D.\x20Iversen,1181,0.61,62.5,1.37,0.08,100,0.23,66.67,1.22,1.36,0,9.75,14.94,77.55,8.23,63.89,6.25,93.9,8,98.1,6.93,53.85,34.6,50.14,1.52,55,0,0,0.3,0,5.03,62.12\x0a25,M.\x20Travers,1134,0.4,100,1.11,0,0,0.4,100,1.11,1.28,0,10.32,14.44,87.91,6.98,77.27,5.63,97.18,8.89,97.32,5.56,72.86,30.73,49.63,0.56,57.14,0,0,0,0,5.24,74.24','remove','y-median','enter','width','10px','select-x','opacity','.median-line','player-name','range','x-median','line','y-axis','background-color','tickSize','push','.x-median','1px','translate(','forEach','value','duration','translate(0,','style','fill','solid','18IOERcx','.y-median','indexOf','html','highlighted','scaleLinear','pageY','median','contains','border-radius','#scatter-plot','font-family','block','381MHsFeR','property','steelblue','1791vDGrlT','absolute','axisBottom','select','median-line','append','7860KcnIrS','left','split','335944fFQSIV','touchstart','map','select-y','transition','max','#f9f9f9','Arial','5px'];_0x2bf2=function(){return _0x2c1681;};return _0x2bf2();}searchBar[_0x33a04e(0x118)]('input',function(){var _0x3f39ce=_0x33a04e,_0xf8fbf5=searchBar['value'][_0x3f39ce(0x112)]();if(_0xf8fbf5===''){resetSearch();return;}_0xf8fbf5=removeSpecialCharsAndDiacritics(_0xf8fbf5),circles[_0x3f39ce(0x10b)](_0x3f39ce(0x147),![]),circles[_0x3f39ce(0x111)](function(_0x1e7802,_0x385e12){var _0x445d6a=_0x3f39ce,_0x33ebe9=removeSpecialCharsAndDiacritics(names[_0x385e12][_0x445d6a(0x112)]());return _0x33ebe9['includes'](_0xf8fbf5);})[_0x3f39ce(0x10b)]('highlighted',!![]);});function removeSpecialCharsAndDiacritics(_0x11336c){var _0xa8eced=_0x33a04e;return _0x11336c['normalize'](_0xa8eced(0xe9))[_0xa8eced(0x108)](/[\u0300-\u036f]/g,'')[_0xa8eced(0x108)](/[^\w\s]/gi,'');}var clickedCircles=[],circles=svg[_0x33a04e(0xee)]('circle')[_0x33a04e(0x11f)](data)[_0x33a04e(0x12b)]()[_0x33a04e(0xd9)]('circle')[_0x33a04e(0x101)]('cx',function(_0x43c86f){var _0x43a412=_0x33a04e;return xScale(_0x43c86f[header[_0x43a412(0x145)](xMetric)]);})['attr']('cy',function(_0x5545b8){return yScale(_0x5545b8[header['indexOf'](yMetric)]);})[_0x33a04e(0x101)]('r',0x8)[_0x33a04e(0x140)](_0x33a04e(0x141),_0x33a04e(0xd3))['on'](_0x33a04e(0xf4),function(_0x27f5b8,_0x21329f){var _0x56a22d=_0x33a04e;d3[_0x56a22d(0xd7)](this)[_0x56a22d(0x10b)]('hovered',!![])[_0x56a22d(0x140)](_0x56a22d(0x141),_0x56a22d(0xfe)),tooltip[_0x56a22d(0xe1)]()['duration'](0xc8)[_0x56a22d(0x140)](_0x56a22d(0x12f),0.9),tooltip[_0x56a22d(0x146)](names[_0x21329f]+_0x56a22d(0x106)+xMetric+':\x20'+_0x27f5b8[header[_0x56a22d(0x145)](xMetric)]+_0x56a22d(0x106)+yMetric+':\x20'+_0x27f5b8[header[_0x56a22d(0x145)](yMetric)])['style'](_0x56a22d(0xdb),d3['event'][_0x56a22d(0xeb)]+0xa+'px')[_0x56a22d(0x140)](_0x56a22d(0x120),d3[_0x56a22d(0x116)][_0x56a22d(0x149)]-0x1c+'px');})['on'](_0x33a04e(0x126),function(_0x3f4770){var _0x167dc4=_0x33a04e;!d3[_0x167dc4(0xd7)](this)['classed'](_0x167dc4(0x104))&&d3[_0x167dc4(0xd7)](this)[_0x167dc4(0x10b)](_0x167dc4(0xed),![])['style']('fill',_0x167dc4(0xd3)),tooltip[_0x167dc4(0xe1)]()[_0x167dc4(0x13e)](0x1f4)[_0x167dc4(0x140)](_0x167dc4(0x12f),0x0);})['on']('click',function(_0x13a456,_0x2b0d78){var _0x56db91=_0x33a04e,_0x3925f7=clickedCircles['indexOf'](_0x2b0d78);_0x3925f7===-0x1?(clickedCircles[_0x56db91(0x138)](_0x2b0d78),d3[_0x56db91(0xd7)](this)[_0x56db91(0x10b)](_0x56db91(0x104),!![])['classed'](_0x56db91(0xed),![])[_0x56db91(0x140)](_0x56db91(0x141),_0x56db91(0xfe)),svg[_0x56db91(0xd9)](_0x56db91(0x121))[_0x56db91(0x101)]('x',xScale(_0x13a456[header[_0x56db91(0x145)](xMetric)])-0x14)[_0x56db91(0x101)]('y',yScale(_0x13a456[header['indexOf'](yMetric)])+0x14)['text'](names[_0x2b0d78])[_0x56db91(0x10b)](_0x56db91(0x131),!![])[_0x56db91(0x140)]('font-family',_0x56db91(0xe4))[_0x56db91(0x140)](_0x56db91(0xf1),'12px')):(clickedCircles['splice'](_0x3925f7,0x1),d3[_0x56db91(0xd7)](this)[_0x56db91(0x10b)](_0x56db91(0x104),![])[_0x56db91(0x10b)](_0x56db91(0xed),![])[_0x56db91(0x140)](_0x56db91(0x141),_0x56db91(0xd3)),d3[_0x56db91(0xee)](_0x56db91(0x10e))[_0x56db91(0x111)](function(){var _0x715dfd=_0x56db91;return d3[_0x715dfd(0xd7)](this)['text']()===names[_0x2b0d78];})[_0x56db91(0x129)]());}),xMedianLine=svg[_0x33a04e(0xd9)]('line')[_0x33a04e(0x101)](_0x33a04e(0xfd),_0x33a04e(0x133))[_0x33a04e(0x101)]('x1',xScale(xMedian))[_0x33a04e(0x101)]('y1',0x0)[_0x33a04e(0x101)]('x2',xScale(xMedian))[_0x33a04e(0x101)]('y2',height)[_0x33a04e(0x140)](_0x33a04e(0x119),_0x33a04e(0xfe))[_0x33a04e(0x140)](_0x33a04e(0x110),'4')['style']('display',medianLinesVisible?_0x33a04e(0x14f):'none'),yMedianLine=svg['append'](_0x33a04e(0x134))[_0x33a04e(0x101)]('class',_0x33a04e(0x12a))[_0x33a04e(0x101)]('x1',0x0)[_0x33a04e(0x101)]('y1',yScale(yMedian))[_0x33a04e(0x101)]('x2',width)[_0x33a04e(0x101)]('y2',yScale(yMedian))[_0x33a04e(0x140)](_0x33a04e(0x119),'red')[_0x33a04e(0x140)](_0x33a04e(0x110),'4')[_0x33a04e(0x140)](_0x33a04e(0xe7),medianLinesVisible?_0x33a04e(0x14f):_0x33a04e(0x10c));function updateChart(){var _0x5efe8f=_0x33a04e;xMetric=selectX[_0x5efe8f(0x151)](_0x5efe8f(0x13d)),yMetric=selectY[_0x5efe8f(0x151)](_0x5efe8f(0x13d)),xScale[_0x5efe8f(0x10f)](d3[_0x5efe8f(0xf9)](data,function(_0x183929){var _0x43da24=_0x5efe8f;return _0x183929[header[_0x43da24(0x145)](xMetric)];}))[_0x5efe8f(0x114)](),yScale[_0x5efe8f(0x10f)](d3['extent'](data,function(_0x561e43){var _0x43dc75=_0x5efe8f;return _0x561e43[header[_0x43dc75(0x145)](yMetric)];}))[_0x5efe8f(0x114)](),svg[_0x5efe8f(0xee)](_0x5efe8f(0x130))[_0x5efe8f(0x129)]();if(medianLinesVisible){var _0x5b1e22=d3[_0x5efe8f(0x14a)](data,function(_0x2e0cd0){var _0x40408d=_0x5efe8f;return _0x2e0cd0[header[_0x40408d(0x145)](xMetric)];}),_0x4bd992=d3['median'](data,function(_0x2b98ac){var _0x4a76c1=_0x5efe8f;return _0x2b98ac[header[_0x4a76c1(0x145)](yMetric)];});svg['append'](_0x5efe8f(0x134))[_0x5efe8f(0x101)]('class',_0x5efe8f(0xd8))[_0x5efe8f(0x101)]('x1',xScale(_0x5b1e22))[_0x5efe8f(0x101)]('y1',0x0)['attr']('x2',xScale(_0x5b1e22))['attr']('y2',height)[_0x5efe8f(0x140)](_0x5efe8f(0x119),_0x5efe8f(0xfe))[_0x5efe8f(0x140)](_0x5efe8f(0x110),'4'),svg['append'](_0x5efe8f(0x134))[_0x5efe8f(0x101)](_0x5efe8f(0xfd),_0x5efe8f(0xd8))[_0x5efe8f(0x101)]('x1',0x0)['attr']('y1',yScale(_0x4bd992))['attr']('x2',width)[_0x5efe8f(0x101)]('y2',yScale(_0x4bd992))[_0x5efe8f(0x140)](_0x5efe8f(0x119),'red')[_0x5efe8f(0x140)]('stroke-dasharray','4');}svg['select'](_0x5efe8f(0xe8))[_0x5efe8f(0x121)](xMetric),svg[_0x5efe8f(0xd7)]('.y-label')[_0x5efe8f(0x121)](yMetric),circles['transition']()[_0x5efe8f(0x13e)](0x3e8)['attr']('cx',function(_0x1518c8){var _0x12acbd=_0x5efe8f;return xScale(_0x1518c8[header[_0x12acbd(0x145)](xMetric)]);})['attr']('cy',function(_0x149040){var _0x2c30e2=_0x5efe8f;return yScale(_0x149040[header[_0x2c30e2(0x145)](yMetric)]);}),svg[_0x5efe8f(0xee)](_0x5efe8f(0x10e))[_0x5efe8f(0x11f)](data)[_0x5efe8f(0x11a)]('text')[_0x5efe8f(0x101)](_0x5efe8f(0xfd),'player-name')[_0x5efe8f(0x101)]('x',function(_0x1a4a0c){var _0x5bd4f5=_0x5efe8f;return xScale(_0x1a4a0c[header[_0x5bd4f5(0x145)](xMetric)])-0x14;})[_0x5efe8f(0x101)]('y',function(_0x2008c8){var _0x2ee933=_0x5efe8f;return yScale(_0x2008c8[header[_0x2ee933(0x145)](yMetric)])+0x14;})[_0x5efe8f(0x121)](function(_0x2ade60,_0x12c009){var _0x9ea835=_0x5efe8f;return clickedCircles[_0x9ea835(0xfb)](_0x12c009)?names[_0x12c009]:'';})[_0x5efe8f(0x140)](_0x5efe8f(0x14e),'Arial')[_0x5efe8f(0x140)](_0x5efe8f(0xf1),_0x5efe8f(0x11c)),svg[_0x5efe8f(0xd7)](_0x5efe8f(0x107))[_0x5efe8f(0xe1)]()[_0x5efe8f(0x13e)](0x3e8)['call'](d3[_0x5efe8f(0xd6)](xScale)['tickSize'](0x0)),svg[_0x5efe8f(0xd7)](_0x5efe8f(0xea))[_0x5efe8f(0xe1)]()['duration'](0x3e8)[_0x5efe8f(0xf3)](d3[_0x5efe8f(0x10a)](yScale)[_0x5efe8f(0x137)](0x0)),svg['select'](_0x5efe8f(0x139))[_0x5efe8f(0xe1)]()[_0x5efe8f(0x13e)](0x3e8)['attr']('x1',xScale(_0x5b1e22))[_0x5efe8f(0x101)]('x2',xScale(_0x5b1e22)),svg[_0x5efe8f(0xd7)](_0x5efe8f(0x144))[_0x5efe8f(0xe1)]()[_0x5efe8f(0x13e)](0x3e8)[_0x5efe8f(0x101)]('y1',yScale(_0x4bd992))['attr']('y2',yScale(_0x4bd992));}function resetSearch(){var _0xaa85d7=_0x33a04e;searchBar[_0xaa85d7(0x13d)]='',circles[_0xaa85d7(0x10b)](_0xaa85d7(0x147),![]);}function _0x5529(_0x52b17e,_0x56ef8d){var _0x2bf213=_0x2bf2();return _0x5529=function(_0x5529be,_0x4aea2c){_0x5529be=_0x5529be-0xd3;var _0x1ce9de=_0x2bf213[_0x5529be];return _0x1ce9de;},_0x5529(_0x52b17e,_0x56ef8d);}function resetMedianLines(){var _0x30ba4d=_0x33a04e;svg[_0x30ba4d(0xee)](_0x30ba4d(0x130))[_0x30ba4d(0x129)]();}var toggleButton=document[_0x33a04e(0x100)]('toggle-median-lines');toggleButton[_0x33a04e(0x118)]('click',function(){var _0x172657=_0x33a04e;medianLinesVisible=!medianLinesVisible,medianLinesVisible?updateChart():svg[_0x172657(0xee)](_0x172657(0x130))['remove']();});
+
+
+</script>
+
+<a href="#" onclick="location.reload(); return false;" rel="noopener noreferrer">
+  <button class="button-1" role="button"><div class="icon4"></div></button>
+<a href="https://datamb.football/" target="_blank" rel="noopener noreferrer">
+  <button class="button-12" role="button"><div class="icon3"></div></button>
+<a href="https://datamb.football/plcb/" target="_blank" rel="noopener noreferrer">
+  <button class="button-2" role="button">Centrebacks</button>
+<a href="https://datamb.football/plfb/" target="_blank" rel="noopener noreferrer">
+  <button class="button-3" role="button">Fullbacks</button>
+<a href="https://datamb.football/plcm/" target="_blank" rel="noopener noreferrer">
+  <button class="button-4" role="button">Midfielders</button>
+<a href="https://datamb.football/plfw/" target="_blank" rel="noopener noreferrer">
+  <button class="button-5" role="button">Wingers</button>
+<a href="https://datamb.football/plst/" target="_blank" rel="noopener noreferrer">
+  <button class="button-6" role="button">Strikers</button>
+<a href="https://datamb.football/plotteam/" target="_blank" rel="noopener noreferrer">
+  <button class="button-7" role="button">Teams</button>
+	<a href="https://datamb.football/radars/" target="_blank" rel="noopener noreferrer">
+  <button class="button-9" role="button">Radars</button>
+<a href="https://twitter.com/DataMB_" target="_blank" rel="noopener noreferrer">
+  <button class="button-8" role="button">@DataMB_</button>
+</a>
+<script>
+
+    // Function to toggle dark mode
+    function toggleDarkMode() {
+      const body = document.querySelector("body");
+      body.classList.toggle("dark-mode");
+
+      // Store the user's preference in local storage
+      const isDarkMode = body.classList.contains("dark-mode");
+      localStorage.setItem("darkMode", isDarkMode);
+    }
+
+    // Check if user has a stored preference for dark mode
+    const storedDarkMode = localStorage.getItem("darkMode");
+
+    if (storedDarkMode === "true") {
+      const body = document.querySelector("body");
+      body.classList.add("dark-mode");
+    }
+
   </script>
+
+<br><br><br>
+		
+	<div id="taboola-below-article-thumbnails"></div>
+<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({
+    mode: 'alternating-thumbnails-a',
+    container: 'taboola-below-article-thumbnails',
+    placement: 'Below Article Thumbnails',
+    target_type: 'mix'
+  });
+</script>	
+
+	<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({flush: true});
+</script>
+	
+
+</body>
 </html>
